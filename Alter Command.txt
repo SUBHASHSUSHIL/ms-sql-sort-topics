@@ -1,0 +1,42 @@
+Alter Command:-
+1.Database name Change.
+- alter database oldName modify name= newName;
+- execute sp_rename 'oldName' 'newName';
+ex:- alter database Employee modify Name = Employee1
+
+2.Table Name Change:-
+- execute sp_rename 'oldName' 'newName';
+ex:- execute sp_ rename 'Employee' 'Employee1';
+
+3.Column Add in Table:-
+- alter table tableName add newColumn DataType;
+ex:- alter table Employee add Designation nvarchar(max);
+
+4.Data Add in Column:-(Update)
+- Update TableName set columnName = 'valueName' where Id = id;
+ex:- update Employee set City = 'Gopalganj' where Id = 2;
+
+5.Column Remove/Delete:-
+- alter table tableName drop column columnName;
+ex:- alter table Employee drop column Designation;
+
+6.Any Column DataType change:-
+-alter table tableName alter column columnName DataType;
+ex:-alter table Employee alter column Name nvarchar(max);
+
+7.Reset Identity (id formating):-
+- DBCC CHECKIDENT('TableName',Reseed,0);
+ex:- dbcc checkident('employee',reseed,1);
+
+8.Not null add in Column:-
+- alter table TableName alter column ColumnName DataType Not Null;
+ex:- alter table Employee alter column Name nvarchar(max) not null;
+
+9.Null Add in Column:-
+- alter table TableName alter column ColumnName DataType  Null;
+ex:- alter table Employee alter column Name nvarchar(max)  Null;
+
+10.Delete in Not Null And Null:-
+- delete from TableName where Id = 1;
+
+11.
