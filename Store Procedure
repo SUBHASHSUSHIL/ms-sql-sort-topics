@@ -1,0 +1,98 @@
+//Store Procedure (Normal Procedure)
+
+//Table:->
+create table AspCoreWithCrud(Id int identity(1,1) primary key,Name varchar(50) not null,Designation varchar(max) not null,Salary bigint not null,City varchar(50) not null,State varchar(50) not null);
+
+//Insert Data:->
+insert into AspCoreWithCrud(Name,Designation,Salary,City,State) values ('Sushil Thakur','Software Developer',89654,'Gopalganj','Bihar');
+
+//Select Store Procedure:->
+Execute Store_Procedure_Name
+
+//Create Procedure:->
+create procedure _empInsert
+@Name varchar(50),
+@Designation varchar(50),
+@Salary bigint,
+@City varchar(50),
+@State varchar(50)
+as
+begin
+insert into AspCoreWithCrud(Name,Designation,Salary,City,State) values (@Name,@Designation,@Salary,@City,@State)
+end
+
+create procedure _empUpdate
+@Id int,
+@Name varchar(50),
+@Designation varchar(50),
+@Salary bigint,
+@City varchar(50),
+@State varchar(50)
+as
+begin
+update AspCoreWithCrud set Name = @Name,Designation = @Designation,Salary = @Salary,City = @City,State = @State where Id = @Id
+end
+
+
+create procedure _empGetAll
+as
+begin
+select * from AspCoreWithCrud
+end
+
+create procedure _empSelect
+@Id int
+as
+begin
+select * from AspCoreWithCrud where Id = @Id
+end
+
+create procedure _empDelete
+@Id int
+as
+begin
+delete from AspCoreWithCrud where Id = @Id
+end
+
+//API Store Procedure create:->
+//Database Create:->
+create database AspDotnetCoreWebApi
+use AspDotnetCoreWebApi
+
+//Table create:->
+create table EmployeWebApi(Id int identity(1,1) primary key,Name varchar(max) not null,Email nvarchar(max) not null,Designation varchar(max) not null,Salary bigint not null,Tdate date default getdate());
+
+//select:->
+select * from EmployeWebApi
+
+//Create Store Procedure:->
+create procedure _Employee
+@Id int,
+@Name varchar(max),
+@Email nvarchar(max),
+@Designation varchar(max),
+@Salary bigint,
+@Type varchar(max)
+as
+begin
+	if(@Type='EmpInsert')
+	begin
+	insert into EmployeWebApi(Name,Email,Designation,Salary) values (@Name,@Email,@Designation,@Salary);
+	end
+	else if(@Type='GetAll')
+	begin
+	select * from EmployeWebApi;
+	end
+	else if(@Type='GetId')
+	begin
+	select * from EmployeWebApi where Id = @Id;
+	end
+	else if(@Type='EmpUpdate')
+	begin
+	update EmployeWebApi set Name = @Name,Email = @Email,Designation = @Designation,Salary = @Salary where Id = @Id;
+	end
+	else if(@Type='EmpDelete')
+	begin
+	Delete from EmployeWebApi where Id = @Id;
+	end
+end
