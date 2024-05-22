@@ -1,0 +1,328 @@
+//store procedure , Searchin TextBox Query , ect
+
+create Database ThakurBaba;
+
+use ThakurBaba;
+
+create table CreCompany(Id int identity(1,1) primary key,CompanyName nvarchar(25),CompanyLogo nvarchar(50),Status nvarchar(15),TDate DateTime default getdate());
+
+create procedure _insertCreCompany
+@CompanyName nvarchar(25),
+@CompanyLogo nvarchar(50),
+@Status nvarchar(15)
+as
+begin
+insert into CreCompany(CompanyName,CompanyLogo,Status)Values(@CompanyName,@CompanyLogo,@Status);
+end
+
+create procedure selectCreCompany
+as
+begin
+select * from CreCompany;
+end
+
+create procedure selectComapny
+as
+begin
+select * from CreCompany order by CompanyName asc;
+end
+
+create procedure UpdateCreCompany
+@Id int,
+@CompanyName nvarchar(25),
+@CompanyLogo nvarchar(50),
+@Status nvarchar(15),
+@TDate DateTime
+as
+begin
+Update CreCompany set CompanyName = @CompanyName,CompanyLogo = @CompanyLogo,Status = @Status,TDate = @TDate where Id = @Id;
+end
+
+create procedure DeleteCreCompany
+@Id int
+as
+begin
+Delete from CreCompany where Id = @Id;
+end
+
+
+create table Country(Id int identity(1,1) primary key,CountryName nvarchar(20));
+
+insert into Country(CountryName) values('Pakistan');
+
+create table State(Id int identity(1,1) primary key,StateName nvarchar(15),CountryId int foreign key references Country(Id));
+
+insert into State(StateName,CountryId)values('Uttar Pradesh',1),('Madhya Pradesh',1);
+select * from State order by StateName asc
+
+create table AddJob(Id int identity(1,1) primary key,CompanyName nvarchar(25),StartDate Date,JobTitle nvarchar(25),
+NumberOfPost nvarchar(50),Description nvarchar(100),Qualification nvarchar(25),Experience nvarchar(25),Specialization nvarchar(100),LastDate Date,
+Salary bigint,JobType nvarchar(25),Organization nvarchar(50),Logo nvarchar(50),Website nvarchar(60),Email nvarchar(50),Address nvarchar(100),Country nvarchar(25),
+State nvarchar(25),Status nvarchar(15));
+
+//Column Datatype Change:-
+alter table AddJob alter column StartDate nvarchar(max)
+alter table AddJob alter column LastDate nvarchar(max)
+alter table AddJob alter column Salary nvarchar(max)
+
+create procedure _AddJob
+@CompanyName nvarchar(25),
+@StartDate nvarchar(max),
+@JobTitle nvarchar(25),
+@NumberOfPost nvarchar(50),
+@Description nvarchar(100),
+@Qualification nvarchar(25),
+@Experience nvarchar(25),
+@Specialization nvarchar(100),
+@LastDate nvarchar(max),
+@Salary nvarchar(max),
+@JobType nvarchar(25),
+@Organization nvarchar(50),
+@Logo nvarchar(50),
+@Website nvarchar(60),
+@Email nvarchar(50),
+@Address nvarchar(100),
+@Country nvarchar(25),
+@State nvarchar(25),
+@Status nvarchar(15)
+as
+begin
+insert into AddJob(CompanyName,StartDate,JobTitle,NumberOfPost,Description,Qualification,Experience,Specialization,LastDate,
+Salary,JobType,Organization,Logo,Website,Email,Address,Country,State,Status) values(@CompanyName,@StartDate,@JobTitle,@NumberOfPost,@Description,@Qualification,@Experience,@Specialization,@LastDate,
+@Salary,@JobType,@Organization,@Logo,@Website,@Email,@Address,@Country,@State,@Status);
+end
+
+//Column Datatype Change:-
+alter table AddJob alter column Salary bigint
+
+create procedure _getUpdateJaddjob
+@Id int,
+@CompanyName nvarchar(25),
+@StartDate nvarchar(max),
+@JobTitle nvarchar(25),
+@NumberOfPost nvarchar(50),
+@Description nvarchar(100),
+@Qualification nvarchar(25),
+@Experience nvarchar(25),
+@Specialization nvarchar(100),
+@LastDate nvarchar(max),
+@Salary nvarchar(max),
+@JobType nvarchar(25),
+@Organization nvarchar(50),
+@Logo nvarchar(50),
+@Website nvarchar(60),
+@Email nvarchar(50),
+@Address nvarchar(100),
+@Country nvarchar(25),
+@State nvarchar(25),
+@Status nvarchar(15)
+as
+begin
+update AddJob set CompanyName = @CompanyName,StartDate = @StartDate,JobTitle = @JobTitle,NumberOfPost = @NumberOfPost,Description = @Description,Qualification = @Qualification,Experience = @Experience,Specialization = @Specialization,LastDate = @LastDate,
+Salary = @Salary,JobType = @JobType,Organization = @Organization,Logo = @Logo,Website = @Website,Email = @Email,Address = @Address,Country = @Country,State = @State,Status = @Status where Id = @Id;
+end
+
+//SEARCHING Query  in TextBox:-
+create procedure _SearchJob
+@Search nvarchar(max)
+as
+begin
+select ROW_NUMBER() over (order by Id) as 'Id', CompanyName,StartDate,JobTitle,NumberOfPost,Description,Qualification,Experience,Specialization,LastDate,
+Salary,JobType,Organization,Logo,Website,Email,Address,Country,State,Status from AddJob where CompanyName like '%'+ @Search +'%' or
+StartDate like '%' + @Search + '%' or JobTitle like '%'+ @Search +'%' or NumberOfPost like '%'+ @Search +'%' or 
+Description like '%'+ @Search +'%' or Qualification like '%'+ @Search +'%' or Experience like '%'+ @Search +'%'
+or Specialization like '%'+ @Search +'%' or LastDate like '%'+ @Search +'%' or Salary like '%'+ @Search +'%'
+or JobType like '%'+ @Search +'%' or Organization like '%'+ @Search +'%' or Logo like '%'+ @Search +'%'
+or Website like '%'+ @Search +'%' or Email like '%'+ @Search +'%' or Address like '%'+ @Search +'%'
+or Country like '%'+ @Search +'%' or State like '%'+ @Search +'%' or Status like '%'+ @Search +'%'
+end
+
+create procedure _SearchdateJob
+@from nvarchar(100),
+@to nvarchar(100)
+as
+begin
+select ROW_NUMBER() over (order by Id)as 'Id',CompanyName,StartDate,JobTitle,NumberOfPost,Description,Qualification,Experience,Specialization,LastDate,
+Salary,JobType,Organization,Logo,Website,Email,Address,Country,State,Status from AddJob where StartDate between @from and @to
+end
+
+create procedure _getdeleteAddJob
+@Id int
+as
+begin
+delete from AddJob where Id = @Id;
+end
+
+create procedure _selectAddJob
+as
+begin
+select * from AddJob;
+end
+
+create table UserResume(Id int identity(1,1) primary key,Resume nvarchar(50),TDate DateTime default getdate());
+
+create procedure _UserResume
+@Resume nvarchar(50)
+as
+begin
+insert into UserResume(Resume)values(@Resume);
+end
+alter table UserRagistration alter column DOB nvarchar(max);
+create table UserRagistration(Id int identity(1,1) primary key,Name nvarchar(25),DOB date,MobileNo bigint,Email nvarchar(25),
+Password nvarchar(8),ConfirmPassword nvarchar(8),TDate dateTime default getdate());
+
+create procedure _UserRagistration
+@Name nvarchar(25),
+@DOB date,
+@MobileNo bigint,
+@Email nvarchar(25),
+@Password nvarchar(8),
+@ConfirmPassword nvarchar(8)
+as
+begin
+insert into UserRagistration(Name,DOB,MobileNo,Email,Password,ConfirmPassword)values(@Name,@DOB,@MobileNo,@Email,@Password,@ConfirmPassword);
+end
+
+create procedure _UserRagistrationUpdate
+@Id int,
+@Name nvarchar(25),
+@DOB nvarchar(max),
+@MobileNo bigint,
+@Email nvarchar(50),
+@Password nvarchar(8),
+@ConfirmPassword nvarchar(8)
+as
+begin
+Update UserRagistration set Name = @Name,DOB = @DOB,MobileNo = @MobileNo,Email = @Email,Password = @Password,ConfirmPassword = @ConfirmPassword where Id = @Id;
+end
+
+select * from UserRagistration
+
+create table AdminRagistration(Id int identity(1,1) primary key,Name nvarchar(25),DOB date,MobileNo bigint,Email nvarchar(25),
+Password nvarchar(8),ConfirmPassword nvarchar(8),TDate dateTime default getdate());
+
+create procedure _AdminRagistration
+@Name nvarchar(25),
+@DOB date,
+@MobileNo bigint,
+@Email nvarchar(25),
+@Password nvarchar(8),
+@ConfirmPassword nvarchar(8)
+as
+begin
+insert into (Name,DOB,MobileNo,Email,Password,ConfirmPassword)values(@Name,@DOB,@MobileNo,@Email,@Password,@ConfirmPassword);
+end
+
+//Remove Table
+drop procedure selectlogin
+
+create procedure selectlogin
+@Email nvarchar(25),
+@Password nvarchar(8)
+as
+begin
+select * from UserRagistration where Email = @Email and Password = @Password;
+end
+
+create procedure selectAdmin
+@Email nvarchar(25),
+@Password nvarchar(8)
+as
+begin
+select * from AdminRagistration where Email = @Email and Password = @Password;
+end
+
+create procedure selectAdmin
+@MobileNo bigint,
+@Email nvarchar(25),
+@Password nvarchar(8)
+as
+begin
+select * from AdminRagistration where MobileNo = @MobileNo and Email = @Email and Password = @Password;
+end
+
+create procedure _searchDate
+@from nvarchar(100),
+@to nvarchar(100)
+as
+begin
+select ROW_NUMBER() over (order by Id)as CompanyName,CompanyLogo,Status,TDate from CreCompany
+where TDate between @from and @to
+end
+
+create procedure _SearchCompany
+@Search nvarchar(50)
+as
+begin
+select ROW_NUMBER() over (order by Id) as CompanyName,
+CompanyLogo,Status,TDate from CreCompany where CompanyName like '%'+
+@Search+'%' or CompanyLogo like '%'+@Search +'%' or Status like '%'+ @Search +'%' or  TDate like '%'+ @Search+'%'
+end
+
+create procedure _getAllAdmin
+@Search nvarchar(50)
+as
+begin
+select ROW_NUMBER() over (order by Id) as 'Id', Name,DOB,MobileNo,Email,Password,ConfirmPassword,TDate from AdminRagistration
+where Name like '%' + @Search + '%' or DOB like '%' + @Search + '%' or MobileNo like '%' + @Search +'%' or Email like '%' + @Search +'%'
+or Password like '%' + @Search + '%' or ConfirmPassword like '%'+ @Search +'%' or TDate like '%' + @Search + '%'
+end
+
+create procedure _searchDateAdmin
+@from nvarchar(100),
+@to nvarchar(100)
+as
+begin
+select ROW_NUMBER() over (order by Id)as 'Id',Name,DOB,MobileNo,Email,Password,ConfirmPassword,TDate from AdminRagistration
+where TDate between @from and @to
+end
+
+create procedure _SearchCompany
+@Search nvarchar(50)
+as
+begin
+select ROW_NUMBER() over (order by Id) as 'Id',CompanyName,
+CompanyLogo,Status,TDate from CreCompany where CompanyName like '%'+
+@Search+'%' or CompanyLogo like '%'+@Search +'%' or Status like '%'+ @Search +'%' or  TDate like '%'+ @Search+'%'
+end
+
+create procedure _getDelete
+@Id int
+as
+begin
+delete from UserRagistration where Id = @Id;
+end
+
+create procedure getAllUser
+@Search nvarchar(50)
+as
+begin
+select ROW_NUMBER() over (order by Id)as 'Id',Name,DOB,MobileNo,Email,Password,ConfirmPassword,TDate from UserRagistration 
+where Name like '%' + @Search + '%' or DOB like '%' + @Search + '%' or MobileNo like '%' + @Search + '%' or Email like '%'
++ @Search + '%' or Password like '%'+ @Search +'%' or ConfirmPassword like '%' + @Search + '%' or TDate like '%' + @Search + '%'
+end
+
+create procedure _searchDatUser
+@from nvarchar(100),
+@to nvarchar(100)
+as
+begin
+select ROW_NUMBER() over (order by Id)as 'Id',Name,DOB,MobileNo,Email,Password,ConfirmPassword,TDate from UserRagistration
+where TDate between @from and @to
+end
+
+create procedure _searchDateCompany
+@from nvarchar(100),
+@to nvarchar(100)
+as
+begin
+select ROW_NUMBER() over (order by Id) as 'Id',CompanyName,CompanyLogo,Status,TDate from CreCompany
+where TDate between @from and @to
+end
+
+create procedure DeleteCompany
+@Id int
+as
+begin
+Delete from CreCompany where Id = @Id;
+end
