@@ -1,0 +1,10 @@
+CREATE VIEW vw_SensorLogDetail_Filtered AS
+SELECT TOP (1000) 
+    [SLDId],
+    [InputData],
+    [TDate],
+    [DeviceTypeId]
+FROM [SensorLogDetail]
+WHERE [InputData] LIKE '*$%';
+
+select * from vw_SensorLogDetail_Filtered
